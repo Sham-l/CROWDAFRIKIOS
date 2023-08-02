@@ -58,7 +58,7 @@ function MainStackScreen() {
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           backgroundColor: 'white',
-          height: '8%',
+          height: '10%',
         },
       }}>
       <MainStack.Screen
@@ -137,14 +137,15 @@ function MainStackScreen() {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [tempUserId,setTempUserId]=useState(null)
 
   useEffect(() => {
     const timer2 = setTimeout(() => {
       const isUserLoggedIn = async () => {
         try {
           const data = await AsyncStorage.getItem('userInfo');
-          if (data) {
-            setIsLoggedIn(!isLoggedIn);
+          if (data !== null && data !== undefined) {
+            setIsLoggedIn(true);
           }
         } catch (error) {
           setIsLoggedIn(false);
@@ -166,7 +167,7 @@ function App() {
     return <SplashScreen></SplashScreen>;
   } else {
     return (
-      <UserProvider value={{isLoggedIn, setIsLoggedIn}}>
+      <UserProvider value={{isLoggedIn, setIsLoggedIn,tempUserId,setTempUserId}}>
         <NavigationContainer>
           {isLoggedIn ? (
             <MainStackScreen />

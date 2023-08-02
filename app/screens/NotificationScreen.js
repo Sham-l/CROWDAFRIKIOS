@@ -3,10 +3,10 @@ import React,{useContext,useEffect,useCallback,useState,useRef} from 'react'
 import { WebView } from "react-native-webview"
 import { userContext } from '../utils/userContext';
 import { MAIN_URL } from '../constants/api';
-
+import Screen from '../components/Screen';
 export default function Profile() {
-    const {userId} = useContext(userContext)
-    const url = `${MAIN_URL}member/notifications/${userId}`
+    const {userId,tempUserId} = useContext(userContext)
+    const url = userId ? `${MAIN_URL}member/notifications/${userId}` : `${MAIN_URL}member/notifications/${tempUserId}` ;
     const [canGoBack, setCanGoBack] = useState(false);
     const webviewRef = useRef(null);
 
@@ -30,12 +30,12 @@ export default function Profile() {
 
 
   return (
-    <View style={{flex:1}}>
+    <Screen>
       <WebView  ref={webviewRef}
         
         onNavigationStateChange={navState => {
           setCanGoBack(navState.canGoBack);
         }} source={{ uri: url }} />
-    </View>
+    </Screen>
   )
 }

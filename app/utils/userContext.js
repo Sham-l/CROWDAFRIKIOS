@@ -7,7 +7,7 @@ const userContext = createContext()
 
 
 function UserProvider({ children,value }) {
-    const [userId,setUserId]=useState()
+    const [userId,setUserId]=useState(null)
     useEffect(() => {
         const getUserId = async () => {
             try {
@@ -21,7 +21,7 @@ function UserProvider({ children,value }) {
         }
         getUserId()
 },[])
-    return <userContext.Provider value={{userId,...value}}>{children }</userContext.Provider>
+    return <userContext.Provider value={{userId,setUserId,...value}}>{children }</userContext.Provider>
 }
 
 export {userContext,UserProvider}

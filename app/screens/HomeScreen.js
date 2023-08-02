@@ -5,13 +5,14 @@ import {MAIN_URL} from '../constants/api';
 import {userContext} from '../utils/userContext';
 import BackButton from '../components/BackButton';
 import CustomText from '../components/CustomText';
+import Screen from '../components/Screen';
 export default function HomeScreen({navigation}) {
-  const {userId} = useContext(userContext);
+  const {userId,tempUserId} = useContext(userContext);
   const [canGoBack, setCanGoBack] = useState(false);
   const [title, setTitle] = useState('');
   const webviewRef = useRef(null);
 
-  const url = userId ? `${MAIN_URL}member/home/${userId}` : null;
+  const url = userId ? `${MAIN_URL}member/home/${userId}` : `${MAIN_URL}member/home/${tempUserId}` ;
  
 
 
@@ -37,32 +38,36 @@ export default function HomeScreen({navigation}) {
         BackHandler.removeEventListener('hardwareBackPress', onAndroidBackPress);
     };
 }, [onAndroidBackPress]);
+
+
   return (
-    <View style={{ flex: 1 }}>
+    <Screen>
     {canGoBack && title !== "Home" && title !== "search.hide" && <View style={{ height: "10%", backgroundColor: "#FE2929", alignItems: "center", flexDirection: "row",gap:25 }}>
         
         <BackButton onPress={onAndroidBackPress}></BackButton>
-        <CustomText style={{fontSize:20,fontWeight:500}} title={title}></CustomText>
+        <CustomText style={{fontSize:20,fontWeight:500}} title={title ? title : '...'}></CustomText>
       </View>}
       {url && <WebView
         ref={webviewRef}
 
-        // injectedJavaScript={`window.ReactNativeWebView.postMessage(document.title)`}
-        // onMessage={(event) => {
-        //   setTitle(event.nativeEvent.data);
-        // }}
+        injectedJavaScriptForMainFrameOnly={false}
+  injectedJavaScript={`(function() {
+    window.ReactNativeWebView.postMessage(document.title);
+    true; 
+  })();`}
+  onMessage={(event) => setTitle(event.nativeEvent.data)}
         onNavigationStateChange={navState => {
          
           if (!navState.loading) {
             setCanGoBack(navState.canGoBack);
-              setTitle(navState.title)
-            } else {
-              setTitle('...')
+            //   setTitle(navState.title)
+            // } else {
+            //   setTitle('...')
           }
          
         }}
         source={{ uri: url }}
       />}
-    </View>
+    </Screen>
   );
 }

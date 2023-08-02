@@ -30,7 +30,7 @@ export default function SignInScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText,setSearchText]=useState('')
  const [filteredCountry,setFilteredCountry]=useState([])
-  const {isLoggedIn,setIsLoggedIn} = useContext(userContext)
+  const {isLoggedIn,setIsLoggedIn,setTempUserId,tempUserId} = useContext(userContext)
   // const [check, setCheck] = useState(true);
   // const [hide, setHide] = useState(false)
   const countryData = getContries()
@@ -124,10 +124,10 @@ const [phone,setPhone]=useState('')
       })
         .then(response => {
           console.log(response.data)
-          setEmail(response.data.email_id)
-          setFullName(response.data.full_name)
-          setUserId(response.data.user_id)
-         
+          setEmail(response.data?.email_id)
+          setFullName(response.data?.full_name)
+          setUserId(response.data?.user_id)
+         setTempUserId(response.data?.user_id)
          setIsLoggedIn(!isLoggedIn)
          
          
@@ -143,6 +143,12 @@ const [phone,setPhone]=useState('')
         });
     }
   }
+  console.log("userId", typeof userId)
+  console.log( userId)
+  console.log("tempUserid" ,typeof tempUserId)
+  console.log( userId)
+
+
 
   return (
     <Card
